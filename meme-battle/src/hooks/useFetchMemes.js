@@ -8,12 +8,17 @@ export default function useFetchMemes(url) {
 		memes: {
 			A: {},
 			B: {}
-		}
+		},
+		error: false,
 	}
 	const [state, setState] = useReducer(
 		(state, newState) => ({ ...state, ...newState }),
 		initialState
 	);
+
+	function getRandomMeme(memes) {
+		return memes[Math.floor(Math.random() * 99)];
+	}
 
 	async function fetchMemes() {
 		try {
@@ -21,12 +26,12 @@ export default function useFetchMemes(url) {
 			const response = await axios.get(url);
 			const data = get(response, ['data', 'data', 'memes'], null);
 			const memes = mapKeys(data, (val, key) => key)
-			const randomA = memes[Math.floor(Math.random() * 99)];
-			const randomB = memes[Math.floor(Math.random() * 99)];
-			setState({ isFetching: false, memes: { A: randomA, B: randomB }});
+			const A = getRandomMeme(memes);
+			const B = getRandomMeme(memes);
+			setState({ isFetching: false, memes: { A, B } });
 
 		} catch (error) {
-			setState({ isFetching: false });
+			setState({ isFetching: false, error: true });
 		}
 	}
 	useEffect(() => {
