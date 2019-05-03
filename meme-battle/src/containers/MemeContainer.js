@@ -1,39 +1,61 @@
-import React from 'react';
+import React, { useEffect, Fragment, useReducer } from 'react';
 import axios from 'axios';
-import { mapKeys, get, isEqual } from 'lodash';
+import { mapKeys, get, map } from 'lodash';
 import MemeCard from '../components/MemeCard';
+import { API_URL } from '../constants';
 
-class MemeContainer extends React.Component {
-	state = null;
-	componentDidMount() {
-		this.getMemes();
-  }
-  getMemes = async () => {
+function MemeContainer() {
+	const initialState = {
+		isFetching: false,
+		memes: {
+			A: {},
+			B: {}
+		}
+	}
+
+	const [state, setState] = useReducer(
+		(state, newState) => ({ ...state, ...newState }),
+		initialState,
+	)
+
+	async function getMemes() {
 		try {
-			const url = 'https://api.imgflip.com/get_memes';
-			const response = await axios.get(url);
+			setState({ isFetching: true });
+			console.log(state.isFetching)
+			const response = await axios.get(API_URL);
 			const memes = get(response, ['data', 'data', 'memes'], null);
 			const memesMap = mapKeys(memes, (val, key) => key)
-			const memeA = memesMap[Math.floor(Math.random() * 99)];
-			const memeB = memesMap[Math.floor(Math.random() * 99)];
-			!isEqual(memeA, memeB) && this.setState({ memeA, memeB });
+			const randomMemeA = memesMap[Math.floor(Math.random() * 99)];
+			const randomMemeB = memesMap[Math.floor(Math.random() * 99)];
+			setState({ isFetching: false, memes: { A: randomMemeA, B: randomMemeB }});
 		}
 		catch (error) {
 			console.log(error);
 		}
 	}
 
-	render() {
-		return (
-			<div>
-				{this.state && <main className="App-main">
-					<MemeCard meme={this.state.memeA} />
-					<MemeCard meme={this.state.memeB} />
-				</main>}
-				<button onClick={this.getMemes}>battle</button>
-			</div>
-		);
-	}
+	useEffect(() => {
+		getMemes();
+	}, [])
+	
+	return (
+		<Fragment>
+			{state.isFetching
+				? <p>...loading</p>
+				: (
+					<Fragment>
+						<div className="App-main">
+							{map(state.memes, (meme, key) => <MemeCard key={key} meme={meme} />)}
+						</div>
+						<br	/>
+						<button onClick={getMemes}>battle</button>
+					</Fragment>
+				)
+			}
+		
+		</Fragment>
+	);
+
 }
 
 
