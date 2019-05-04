@@ -21,7 +21,7 @@ function useSelectWinner() {
 
 	useEffect(() => {
 		selectWinner();
-	},)
+	})
 
 	return [isSelected, selectWinner];
 
