@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import { map } from 'lodash';
 import MemeCard from '../components/MemeCard';
 import { API_URL } from '../constants';
-import useFetchMemes from '../hooks/useFetchMemes';
+import { useFetchMemes } from '../hooks';
 
 function MemeContainer() {
-	const [state, fetchMemes] = useFetchMemes(API_URL);
+	let [state, fetchMemes] = useFetchMemes(API_URL);
 	return (
 		<Fragment>
 			{state.isFetching

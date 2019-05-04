@@ -37,6 +37,6 @@ export default function useFetchMemes(url) {
 	useEffect(() => {
 		fetchMemes();
 	}, [])
-	
+
 	return [state, fetchMemes];
 }
