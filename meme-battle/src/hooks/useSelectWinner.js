@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useCacheContext } from '../hooks';
+
 
 function useSelectWinner() {
 	let { cache, setCache } = useCacheContext();
 	let [isSelected, setIsSelected] = useState(false);
 
-	function selectWinner(meme) {
+	const selectWinner = useCallback((meme) => {
 		if (meme && cache) {
 			let newCache = {
 				...cache,
@@ -17,11 +18,11 @@ function useSelectWinner() {
 			setCache(newCache);
 			setIsSelected(true);
 		}
-	}
+	}, [cache, setCache])
 
 	useEffect(() => {
 		selectWinner();
-	})
+	}, [selectWinner])
 
 	return [isSelected, selectWinner];
 
