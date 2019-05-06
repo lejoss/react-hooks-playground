@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer } from 'react';
 
 function useCache() {
   let initialState = { winners: {}};
@@ -6,11 +6,7 @@ function useCache() {
 	const [cache, setCache] = useReducer(
 		(state, newState) => ({ ...state, ...newState }),
 		initialState
-	);
-
-  useEffect(() => {
-    setCache()
-  }, [])
+  );
 
   return [cache, setCache]
 }

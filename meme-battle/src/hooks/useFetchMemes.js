@@ -1,6 +1,10 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useCallback } from 'react';
 import axios from 'axios';
 import { mapKeys, get } from 'lodash';
+
+function getRandomMeme(memes) {
+	return memes[Math.floor(Math.random() * 99)];
+}
 
 export default function useFetchMemes(url) {
 	const initialState = {
@@ -16,11 +20,7 @@ export default function useFetchMemes(url) {
 		initialState
 	);
 
-	function getRandomMeme(memes) {
-		return memes[Math.floor(Math.random() * 99)];
-	}
-
-	async function fetchMemes() {
+	const fetchMemes = useCallback(async () => {
 		try {
 			setState({ isFetching: true });
 			const response = await axios.get(url);
@@ -33,10 +33,12 @@ export default function useFetchMemes(url) {
 		} catch (error) {
 			setState({ isFetching: false, error: true });
 		}
-	}
+	}, [url])
+
+
 	useEffect(() => {
 		fetchMemes();
-	}, [])
+	}, [fetchMemes])
 
 	return [state, fetchMemes];
 }

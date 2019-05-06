@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
-import { CacheContext } from '../context/CacheContext';
+import { useState, useEffect } from 'react';
+import { useCacheContext } from '../hooks';
 
 function useSelectWinner() {
-	let { cache, setCache } = useContext(CacheContext);
+	let { cache, setCache } = useCacheContext();
 	let [isSelected, setIsSelected] = useState(false);
 
 	function selectWinner(meme) {

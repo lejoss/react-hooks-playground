@@ -8,17 +8,19 @@ function MemeContainer() {
 	let [state, fetchMemes] = useFetchMemes(API_URL);
 	return (
 		<Fragment>
-			{state.isFetching
-				? <p>...loading</p>
-				: (
-					<Fragment>
-						<div className="App-main">
-							{map(state.memes, (meme, key) => <MemeCard key={key} meme={meme} />)}
-						</div>
-						<br	/>
-						<button onClick={fetchMemes}>battle</button>	
-					</Fragment>
-				)
+			{state.error
+				? <p>something wrong happened, call batman!</p>
+				: state.isFetching
+					? <p>...loading</p>
+					: (
+						<Fragment>
+							<div className="App-main">
+								{map(state.memes, (meme, key) => <MemeCard key={key} meme={meme} />)}
+							</div>
+							<br	/>
+							<button onClick={fetchMemes}>battle</button>	
+						</Fragment>
+					)
 			}
 		</Fragment>
 	);
